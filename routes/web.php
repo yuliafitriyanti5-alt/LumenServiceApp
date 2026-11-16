@@ -57,3 +57,28 @@ $router->post('/products', 'ProductsController@store');
 $router->get('/product/{id}', 'ProductsController@show');
 $router->put('/product/{id}', 'ProductsController@update');
 $router->delete('/product/{id}', 'ProductsController@destroy');
+
+//Authentication
+$router->group(['prefix' => 'auth'], function () use ($router) {
+    $router->post('/register', 'AuthController@register');
+    $router->post('/login', 'AuthController@login');
+});
+
+$router->group(['middleware' => ['auth']], function ($router) {
+    $router->get('posts', 'PostsController@index');
+    $router->post('posts', 'PostsController@store');
+    $router->get('/post/{id}', 'PostsController@show');
+    $router->put('post/{id}', 'PostsController@update');
+    $router->delete('post/{id}', 'PostsController@destroy');
+});
+
+$router->group(['middleware' => 'auth'], function () use ($router) {
+    
+    // Route Books (Tantangan)
+    $router->get('/books', 'BookController@index');
+    $router->post('/books', 'BookController@store');
+    $router->get('/books/{id}', 'BookController@show');
+    $router->put('/books/{id}', 'BookController@update');
+    $router->delete('/books/{id}', 'BookController@destroy');
+
+});
